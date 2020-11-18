@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <style>
+        body{padding-top: 50px;}
+    </style>
+</head>
+<body>
+    <div class="container" id="body"></div>
+
+    <script>
+      let requestURL = "ezquiz.json";
+      let request = new XMLHttpRequest();
+      request.onreadystatechange = function () {
+        if (request.readyState == 4 && request.status == 200) {
+          dataReportStatus(JSON.parse(request.responseText));
+        }
+      };
+      request.open("GET", requestURL, true);
+      request.send();
+
+      function dataReportStatus(data) {
+        var divbody = document.getElementById("body");
+        for(i=0 ; i<data.tracks.items.length ;){
+          var divrow = document.createElement("div");
+          divrow.setAttribute("class","row");
+          for(j=0 ; j<3 && i<data.tracks.items.length ;j++,i++){
+            var item = document.createElement("div");
+            item.setAttribute("class","col-4");
+            var image = document.createElement("img");
+            image.setAttribute("src",data.tracks.items[i].album.images[1].url);
+            item.appendChild(image);
+            var text = document.createElement("p");
+            text.innerHTML = "<br><b>"+data.tracks.items[i].album.name+"</b><br>Artist: "+data.tracks.items[i].album.artists[0].name+"</b><br>Release date: "+
+                            data.tracks.items[i].album.release_date+"</b><br>Avaliable: "+data.tracks.items[i].album.available_markets.length+" countries";
+            item.appendChild(text);
+            divrow.appendChild(item);
+          }
+          divbody.appendChild(divrow);
+        }
+      }
+    </script>
+</body>
+</html>
